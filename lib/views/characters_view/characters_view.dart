@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rick_and_morty/App/router.dart';
 import 'package:rick_and_morty/views/characters_view/characters_viewmodel.dart';
+import 'package:rick_and_morty/views/widgets/character_card_listview.dart';
 import 'package:rick_and_morty/views/widgets/characters_cardview.dart';
 
 class CharactersView extends StatefulWidget {
@@ -14,13 +15,11 @@ class CharactersView extends StatefulWidget {
 
 class _CharactersViewState extends State<CharactersView> {
   @override
-
   //viewmodel ile ilişki kurmak için
-  void initState(){
+  void initState() {
     super.initState();
     context.read<CharactersViewModal>().getCharacters();
   }
-
 
   Widget build(BuildContext context) {
     return Padding(
@@ -28,30 +27,20 @@ class _CharactersViewState extends State<CharactersView> {
       child: Column(
         children: [
           _searchInputWidget(context),
-          CharactersCardView(
-            image: 'https://rickandmortyapi.com/api/character/avatar/285.jpeg',
-            name: 'Rick Sancez',
-            origin: 'Earth (C-137)',
-            status: 'Yaşıyor',
-            type: 'İnsan',
-
-          ),
-          CharactersCardView(
-            image: 'https://rickandmortyapi.com/api/character/avatar/285.jpeg',
-            name: 'Rick Sancez',
-            origin: 'Earth (C-137)',
-            status: 'Yaşıyor',
-            type: 'İnsan',
-
-          ),
-          CharactersCardView(
-            image: 'https://rickandmortyapi.com/api/character/avatar/285.jpeg',
-            name: 'Rick Sancez',
-            origin: 'Earth (C-137)',
-            status: 'Yaşıyor',
-            type: 'İnsan',
-
-          ),
+          Consumer<CharactersViewModal>(
+            builder: (context, viewModel, child) {
+              if (viewModel.charactersModel == null) {
+                return const CircularProgressIndicator.adaptive();
+              } else {
+                return CharacterCardListview(
+                    characters: viewModel.charactersModel!.characters,
+                  onLoadmore: (){
+                    viewModel.getCharactersMore();
+                  },
+                );
+              }
+            },
+          )
         ],
       ),
     );
