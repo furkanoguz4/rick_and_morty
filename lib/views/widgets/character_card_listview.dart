@@ -1,48 +1,83 @@
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:rick_and_morty/App/locator.dart';
 import 'package:rick_and_morty/models/characters_model.dart';
+import 'package:rick_and_morty/services/prefences_service.dart';
 import 'package:rick_and_morty/views/widgets/characters_cardview.dart';
 
-class CharacterCardListview extends StatefulWidget {
+class CharacterCardListView extends StatefulWidget {
   final List<CharacterModel> characters;
-  final VoidCallback onLoadmore;
-  const CharacterCardListview({super.key, required this.characters,required this.onLoadmore});
+  final VoidCallback onLoadMore;
+  final bool loadMore;
+  const CharacterCardListView({
+    super.key,
+    required this.characters,
+    required this.onLoadMore,
+    this.loadMore = false,
+  });
 
   @override
-  State<CharacterCardListview> createState() => _CharacterCardListviewState();
+  State<CharacterCardListView> createState() => _CharacterCardListViewState();
 }
 
-class _CharacterCardListviewState extends State<CharacterCardListview> {
+class _CharacterCardListViewState extends State<CharacterCardListView> {
   final _scrollController = ScrollController();
+  bool _isLoading = true;
+  List<int> _favoritedList = [];
 
   @override
   void initState() {
-    // TODO: implement initState
+    _getFavorites();
+    _detectScrollBottom();
     super.initState();
-    _detectedScrollBottom();
   }
-  void _detectedScrollBottom(){
-    _scrollController.addListener((){
+
+  void _setLoading(bool value) {
+    _isLoading = value;
+    setState(() {});
+  }
+
+  void _getFavorites() async {
+    _favoritedList = locator<PreferencesService>().getSavedCharacters();
+    _setLoading(false);
+    setState(() {});
+  }
+
+  void _detectScrollBottom() {
+    _scrollController.addListener(() {
       final maxScroll = _scrollController.position.maxScrollExtent;
       final currentPosition = _scrollController.position.pixels;
-      const int delta = 50;
-      if(maxScroll-currentPosition <= delta){
-          widget.onLoadmore();
+      const int delta = 200;
+
+      if (maxScroll - currentPosition <= delta) {
+        widget.onLoadMore();
       }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Flexible(
-      child: ListView.builder(
-        itemCount: widget.characters.length,
-        controller: _scrollController,
-        itemBuilder: (context, index) {
-          final characterModel = widget.characters[index];
-          return CharactersCardView(characterModel: characterModel);
-        },
-      ),
-    );
+    if (_isLoading) {
+      return const CircularProgressIndicator.adaptive();
+    } else {
+      return Flexible(
+        child: ListView.builder(
+          itemCount: widget.characters.length,
+          controller: _scrollController,
+          itemBuilder: (context, index) {
+            final characterModel = widget.characters[index];
+            final bool isFavorited = _favoritedList.contains(characterModel.id);
+            return Column(
+              children: [
+                CharacterCardView(characterModel: characterModel, isFavorited: isFavorited),
+                if (widget.loadMore && index == widget.characters.length - 1)
+                  const CircularProgressIndicator.adaptive()
+              ],
+            );
+          },
+        ),
+      );
+    }
   }
 }

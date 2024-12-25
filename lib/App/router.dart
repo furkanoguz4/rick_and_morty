@@ -11,42 +11,58 @@ import 'package:rick_and_morty/views/favourites_view/favourites_view.dart';
 final _routerKey = GlobalKey<NavigatorState>();
 
 class AppRoutes {
-  static const String characters = "/";
-  static const String favourites = "/favourites";
-  static const String locations = "/locaitons";
-  static const String sections = "/sections";
+  AppRoutes._();
+
+  static const String characters = '/';
+  static const String favourites = '/favourites';
+  static const String locations = '/locations';
+  static const String sections = '/sections';
 }
 
 final router = GoRouter(
-    navigatorKey: _routerKey,
-    initialLocation: AppRoutes.characters,
-    routes: [
-      StatefulShellRoute.indexedStack(
-          builder: (context, state, navigationShell) =>
-              AppView(navigationShell: navigationShell),
-          branches: [
-            StatefulShellBranch(routes: [
-              GoRoute(
-                  path: AppRoutes.characters,
-                  builder: (context, state) => ChangeNotifierProvider(
-                        create: (context) => CharactersViewModal(),
-                        child: const CharactersView(), //bu kod bloğu charactersview sayfası açılınca birbirlerinden haberdar olmaları için yapıldı (viewmodal ile)
-                      ))
-            ]),
-            StatefulShellBranch(routes: [
-              GoRoute(
-                  path: AppRoutes.favourites,
-                  builder: (context, state) => const FavoruitesView())
-            ]),
-            StatefulShellBranch(routes: [
-              GoRoute(
-                  path: AppRoutes.locations,
-                  builder: (context, state) => const LocationsView())
-            ]),
-            StatefulShellBranch(routes: [
-              GoRoute(
-                  path: AppRoutes.sections,
-                  builder: (context, state) => const SectionsView())
-            ]),
-          ]),
-    ]);
+  navigatorKey: _routerKey,
+  initialLocation: AppRoutes.characters,
+  routes: [
+    StatefulShellRoute.indexedStack(
+      builder: (context, state, navigationShell) =>
+          AppView(navigationShell: navigationShell),
+      branches: [
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: AppRoutes.characters,
+              builder: (context, state) => ChangeNotifierProvider(
+                create: (context) => CharactersViewmodel(),
+                child: const CharactersView(),
+              ),
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: AppRoutes.favourites,
+              builder: (context, state) => const FavouritesView(),
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: AppRoutes.locations,
+              builder: (context, state) => const LocationsView(),
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: AppRoutes.sections,
+              builder: (context, state) => const SectionsView(),
+            ),
+          ],
+        ),
+      ],
+    ),
+  ],
+);

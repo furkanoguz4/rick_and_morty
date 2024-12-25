@@ -6,7 +6,7 @@ class LocationsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Center(
-      child: Text("Konum abi göndermeden bilemeyiz"),
+      child: Text('Konumlar'),
     );
   }
 }

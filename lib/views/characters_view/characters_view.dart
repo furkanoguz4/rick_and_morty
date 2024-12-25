@@ -15,52 +15,53 @@ class CharactersView extends StatefulWidget {
 
 class _CharactersViewState extends State<CharactersView> {
   @override
-  //viewmodel ile ilişki kurmak için
   void initState() {
     super.initState();
-    context.read<CharactersViewModal>().getCharacters();
+    context.read<CharactersViewmodel>().getCharacters();
   }
 
+  @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 17),
-      child: Column(
-        children: [
-          _searchInputWidget(context),
-          Consumer<CharactersViewModal>(
-            builder: (context, viewModel, child) {
-              if (viewModel.charactersModel == null) {
-                return const CircularProgressIndicator.adaptive();
-              } else {
-                return CharacterCardListview(
-                    characters: viewModel.charactersModel!.characters,
-                  onLoadmore: (){
-                    viewModel.getCharactersMore();
-                  },
-                );
-              }
-            },
-          )
-        ],
+    final viewModel = context.watch<CharactersViewmodel>();
+    return Scaffold(
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 9),
+          child: Column(
+            children: [
+              _searchInputWidget(context, viewModel: viewModel),
+              viewModel.charactersModel == null
+                  ? const CircularProgressIndicator.adaptive()
+                  : CharacterCardListView(
+                characters: viewModel.charactersModel!.characters,
+                onLoadMore: () => viewModel.getCharactersMore(),
+                loadMore: viewModel.loadMore,
+              )
+            ],
+          ),
+        ),
       ),
     );
   }
 
-  Widget _searchInputWidget(BuildContext context) {
+  Widget _searchInputWidget(BuildContext context,
+      {required CharactersViewmodel viewModel}) {
     return Padding(
-      padding: const EdgeInsets.only(
-        top: 12,
-        bottom: 9,
-      ),
-      child: TextField(
+      padding: const EdgeInsets.only(top: 12, bottom: 16),
+      child: TextFormField(
+        textInputAction: TextInputAction.search,
+        onFieldSubmitted: viewModel.getCharactersByName,
         decoration: InputDecoration(
-          labelText: 'Karakter ara',
-          labelStyle: TextStyle(
+          hintText: 'Karakterlerde Ara',
+          hintStyle: TextStyle(
             color: Theme.of(context).colorScheme.onSurface,
           ),
           border: const OutlineInputBorder(),
-          prefixIcon: Icon(Icons.search),
-          suffixIcon: IconButton(onPressed: () {}, icon: Icon(Icons.more_vert)),
+          prefixIcon: const Icon(Icons.search),
+          suffixIcon: IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.more_vert),
+          ),
         ),
       ),
     );
