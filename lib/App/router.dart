@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rick_and_morty/models/characters_model.dart';
+import 'package:rick_and_morty/views/Locations_view/location_viewmodel.dart';
 import 'package:rick_and_morty/views/Locations_view/locations_view.dart';
 import 'package:rick_and_morty/views/Sections_view/sections_view.dart';
 import 'package:rick_and_morty/views/app_view.dart';
@@ -71,7 +72,7 @@ final router = GoRouter(
           routes: [
             GoRoute(
               path: AppRoutes.locations,
-              builder: (context, state) => const LocationsView(),
+              builder: (context, state) =>  ChangeNotifierProvider( create: (context) => LocationViewmodel() , child:  const LocationsView(),),
             ),
           ],
         ),

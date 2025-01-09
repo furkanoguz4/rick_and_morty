@@ -56,6 +56,7 @@ class _CharacterCardListViewState extends State<CharacterCardListView> {
         }
       });
     }
+
   }
 
   @override
@@ -72,7 +73,8 @@ class _CharacterCardListViewState extends State<CharacterCardListView> {
             final bool isFavorited = _favoritedList.contains(characterModel.id);
             return Column(
               children: [
-                CharacterCardView(characterModel: characterModel, isFavorited: isFavorited),
+                CharacterCardView(
+                    characterModel: characterModel, isFavorited: isFavorited),
                 if (widget.loadMore && index == widget.characters.length - 1)
                   const CircularProgressIndicator.adaptive()
               ],

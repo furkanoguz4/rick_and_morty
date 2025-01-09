@@ -3,13 +3,15 @@ import 'package:flutter/material.dart';
 class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final bool transparentBackground;
-  const AppBarWidget({super.key, required this.title, this.transparentBackground=false});
+  const AppBarWidget(
+      {super.key, required this.title, this.transparentBackground = false});
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: transparentBackground ? Colors.transparent : null ,
-      title:  Text(title,
+      backgroundColor: transparentBackground ? Colors.transparent : null,
+      title: Text(
+        title,
         style: const TextStyle(
           fontSize: 22,
           fontWeight: FontWeight.w500,

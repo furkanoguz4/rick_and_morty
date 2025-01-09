@@ -7,8 +7,8 @@ import 'package:rick_and_morty/services/prefences_service.dart';
 
 class CharacterCardView extends StatefulWidget {
   final CharacterModel characterModel;
-  bool isFavorited;
-  CharacterCardView({
+  final bool isFavorited;
+  const CharacterCardView({
     super.key,
     required this.characterModel,
     this.isFavorited = false,
@@ -19,13 +19,21 @@ class CharacterCardView extends StatefulWidget {
 }
 
 class _CharacterCardViewState extends State<CharacterCardView> {
+  late bool isFavorited;
+
+  @override
+  void initState() {
+    isFavorited = widget.isFavorited;
+    super.initState();
+  }
+
   void _favoriteCharacter() {
-    if (widget.isFavorited) {
+    if (isFavorited) {
       locator<PreferencesService>().removeCharacter(widget.characterModel.id);
-      widget.isFavorited = false;
+      isFavorited = false;
     } else {
       locator<PreferencesService>().saveCharacter(widget.characterModel.id);
-      widget.isFavorited = true;
+      isFavorited = true;
     }
 
     setState(() {});
@@ -34,9 +42,8 @@ class _CharacterCardViewState extends State<CharacterCardView> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: (){
-        context.push(AppRoutes.characterProfile, extra: widget.characterModel);
-      },
+      onTap: () => context.push(AppRoutes.characterProfile,
+          extra: widget.characterModel),
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 7),
         child: Stack(
@@ -52,9 +59,12 @@ class _CharacterCardViewState extends State<CharacterCardView> {
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(6),
-                    child: Image.network(
-                      widget.characterModel.image,
-                      height: 100,
+                    child: Hero(
+                      tag: widget.characterModel.image,
+                      child: Image.network(
+                        widget.characterModel.image,
+                        height: 100,
+                      ),
                     ),
                   ),
                   Padding(
@@ -87,8 +97,7 @@ class _CharacterCardViewState extends State<CharacterCardView> {
             ),
             IconButton(
               onPressed: _favoriteCharacter,
-              icon: Icon(
-                  widget.isFavorited ? Icons.bookmark : Icons.bookmark_border),
+              icon: Icon(isFavorited ? Icons.bookmark : Icons.bookmark_border),
             )
           ],
         ),

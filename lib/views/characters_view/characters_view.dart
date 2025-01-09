@@ -25,10 +25,10 @@ class _CharactersViewState extends State<CharactersView> {
   Widget build(BuildContext context) {
     final viewModel = context.watch<CharactersViewmodel>();
     return Scaffold(
-      appBar: const AppBarWidget(title: "Rick and Morty"),
+      appBar: const AppBarWidget(title: 'Rick and Morty'),
       body: Center(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 9),
+          padding: const EdgeInsets.symmetric(horizontal: 18),
           child: Column(
             children: [
               _searchInputWidget(context, viewModel: viewModel),
