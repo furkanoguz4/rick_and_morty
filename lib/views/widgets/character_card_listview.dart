@@ -8,12 +8,12 @@ import 'package:rick_and_morty/views/widgets/characters_cardview.dart';
 
 class CharacterCardListView extends StatefulWidget {
   final List<CharacterModel> characters;
-  final VoidCallback onLoadMore;
+  final VoidCallback? onLoadMore;
   final bool loadMore;
   const CharacterCardListView({
     super.key,
     required this.characters,
-    required this.onLoadMore,
+    this.onLoadMore,
     this.loadMore = false,
   });
 
@@ -45,15 +45,17 @@ class _CharacterCardListViewState extends State<CharacterCardListView> {
   }
 
   void _detectScrollBottom() {
-    _scrollController.addListener(() {
-      final maxScroll = _scrollController.position.maxScrollExtent;
-      final currentPosition = _scrollController.position.pixels;
-      const int delta = 200;
+    if (widget.onLoadMore != null) {
+      _scrollController.addListener(() {
+        final maxScroll = _scrollController.position.maxScrollExtent;
+        final currentPosition = _scrollController.position.pixels;
+        const int delta = 200;
 
-      if (maxScroll - currentPosition <= delta) {
-        widget.onLoadMore();
-      }
-    });
+        if (maxScroll - currentPosition <= delta) {
+          widget.onLoadMore!();
+        }
+      });
+    }
   }
 
   @override

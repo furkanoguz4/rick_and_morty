@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rick_and_morty/App/router.dart';
 import 'package:rick_and_morty/views/characters_view/characters_viewmodel.dart';
+import 'package:rick_and_morty/views/widgets/appbar_widget.dart';
 import 'package:rick_and_morty/views/widgets/character_card_listview.dart';
 import 'package:rick_and_morty/views/widgets/characters_cardview.dart';
 
@@ -24,6 +25,7 @@ class _CharactersViewState extends State<CharactersView> {
   Widget build(BuildContext context) {
     final viewModel = context.watch<CharactersViewmodel>();
     return Scaffold(
+      appBar: const AppBarWidget(title: "Rick and Morty"),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 9),

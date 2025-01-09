@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:rick_and_morty/App/locator.dart';
+import 'package:rick_and_morty/App/router.dart';
 import 'package:rick_and_morty/models/characters_model.dart';
 import 'package:rick_and_morty/services/prefences_service.dart';
 
@@ -31,60 +33,65 @@ class _CharacterCardViewState extends State<CharacterCardView> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 7),
-      child: Stack(
-        alignment: Alignment.topRight,
-        children: [
-          Container(
-            width: double.infinity,
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.secondary,
-              borderRadius: BorderRadius.circular(6),
-            ),
-            child: Row(
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(6),
-                  child: Image.network(
-                    widget.characterModel.image,
-                    height: 100,
+    return GestureDetector(
+      onTap: (){
+        context.push(AppRoutes.characterProfile, extra: widget.characterModel);
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 7),
+        child: Stack(
+          alignment: Alignment.topRight,
+          children: [
+            Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.secondary,
+                borderRadius: BorderRadius.circular(6),
+              ),
+              child: Row(
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(6),
+                    child: Image.network(
+                      widget.characterModel.image,
+                      height: 100,
+                    ),
                   ),
-                ),
-                Padding(
-                  padding:
-                  const EdgeInsets.symmetric(vertical: 6, horizontal: 17),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        widget.characterModel.name,
-                        style: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
+                  Padding(
+                    padding:
+                    const EdgeInsets.symmetric(vertical: 6, horizontal: 17),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          widget.characterModel.name,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 5),
-                      _infoWidget(
-                          type: 'Köken',
-                          value: widget.characterModel.origin.name),
-                      const SizedBox(height: 4),
-                      _infoWidget(
-                          type: 'Durum',
-                          value:
-                          '${widget.characterModel.status} - ${widget.characterModel.species}'),
-                    ],
-                  ),
-                )
-              ],
+                        const SizedBox(height: 5),
+                        _infoWidget(
+                            type: 'Köken',
+                            value: widget.characterModel.origin.name),
+                        const SizedBox(height: 4),
+                        _infoWidget(
+                            type: 'Durum',
+                            value:
+                            '${widget.characterModel.status} - ${widget.characterModel.species}'),
+                      ],
+                    ),
+                  )
+                ],
+              ),
             ),
-          ),
-          IconButton(
-            onPressed: _favoriteCharacter,
-            icon: Icon(
-                widget.isFavorited ? Icons.bookmark : Icons.bookmark_border),
-          )
-        ],
+            IconButton(
+              onPressed: _favoriteCharacter,
+              icon: Icon(
+                  widget.isFavorited ? Icons.bookmark : Icons.bookmark_border),
+            )
+          ],
+        ),
       ),
     );
   }
